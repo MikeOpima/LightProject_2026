@@ -1,6 +1,6 @@
 /* Six Ways to Tell It — behaviour.
    Renders the framework rail, the selected framework, and the cross-reference table.
-   Content lives in js/data.js. */
+   Content lives in js/data.js. Colour-theme toggle lives in js/theme.js (load it first). */
 
 (function () {
   "use strict";
@@ -16,47 +16,6 @@
   function esc(s) {
     return String(s).replace(/[&<>"]/g, function (c) {
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
-    });
-  }
-
-  /* ---------- theme ---------- */
-  var root   = document.documentElement;
-  var ttBtn  = document.getElementById("theme-toggle");
-  var ttText = document.getElementById("tt-label");
-
-  function stored(key) {
-    try { return localStorage.getItem(key); } catch (e) { return null; }
-  }
-  function store(key, value) {
-    try { localStorage.setItem(key, value); } catch (e) { /* private mode — fine */ }
-  }
-  function systemDark() {
-    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-  }
-  function applyTheme(mode) {
-    if (mode === "light" || mode === "dark") {
-      root.setAttribute("data-theme", mode);
-    } else {
-      root.removeAttribute("data-theme");
-    }
-    var effective = mode === "system" ? (systemDark() ? "dark" : "light") : mode;
-    ttText.textContent = effective === "dark" ? "Light" : "Dark";
-    ttBtn.setAttribute("aria-label", "Switch to " + (effective === "dark" ? "light" : "dark") + " theme");
-  }
-
-  var theme = stored("gospel-theme") || "system";
-  applyTheme(theme);
-
-  ttBtn.addEventListener("click", function () {
-    var effective = theme === "system" ? (systemDark() ? "dark" : "light") : theme;
-    theme = effective === "dark" ? "light" : "dark";
-    store("gospel-theme", theme);
-    applyTheme(theme);
-  });
-
-  if (window.matchMedia) {
-    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () {
-      if (theme === "system") applyTheme("system");
     });
   }
 
@@ -78,13 +37,19 @@
     }
   }
 
+  /* speech-friendly rendering of a reference like "Romans 8:38–39" */
+  function speakableRef(r) {
+    return r.replace(/:/g, " verse ").replace(/–/g, " to ");
+  }
+
   /* ---------- framework panel ---------- */
   function renderPanel() {
     var m = METHODS.filter(function (x) { return x.id === current; })[0];
 
     var steps = m.steps.map(function (s, i) {
       var verses = s.refs.map(function (r) {
-        return '<div class="verse">' +
+        var spoken = speakableRef(r) + ". " + (VERSES[r] || "");
+        return '<div class="verse" data-va="' + esc(spoken) + '">' +
           '<span class="vref">' + esc(r) + '</span>' +
           '<p class="vtext">' + esc(VERSES[r] || "") + '</p>' +
           '</div>';
@@ -93,9 +58,9 @@
       return '<li class="step">' +
         '<div class="step-n">' + ("0" + (i + 1)).slice(-2) + '</div>' +
         '<div class="step-body">' +
-          '<h3>' + esc(s.h) + '</h3>' +
-          (s.draw ? '<p class="step-draw">✎ ' + esc(s.draw) + '</p>' : "") +
-          '<p class="step-say">' + esc(s.say) + '</p>' +
+          '<h3 data-va="' + esc(s.h) + '">' + esc(s.h) + '</h3>' +
+          (s.draw ? '<p class="step-draw" data-va="' + esc("Drawing instruction: " + s.draw) + '">✎ ' + esc(s.draw) + '</p>' : "") +
+          '<p class="step-say" data-va="' + esc(s.say) + '">' + esc(s.say) + '</p>' +
           '<div class="verses">' + verses + '</div>' +
           '<button class="reveal" type="button">Reveal · ' + s.refs.length +
             ' verse' + (s.refs.length > 1 ? "s" : "") + '</button>' +
@@ -110,12 +75,22 @@
       '<article class="method">' +
         '<div class="method-head">' +
           '<p class="method-kicker">' + esc(m.kicker) + '</p>' +
-          '<h2>' + esc(m.title) + '</h2>' +
-          '<p class="method-lede">' + esc(m.lede) + '</p>' +
+          '<h2 data-va="' + esc(m.title) + '">' + esc(m.title) + '</h2>' +
+          '<p class="method-lede" data-va="' + esc(m.lede) + '">' + esc(m.lede) + '</p>' +
+          '<div class="voiceover" hidden>' +
+            '<button class="va-toggle" type="button" aria-pressed="false" title="Uses your browser’s built-in text-to-speech">' +
+              '<span class="va-icon" aria-hidden="true">&#9658;</span>' +
+              '<span class="va-label">Listen</span>' +
+            '</button>' +
+            '<button class="va-stop" type="button" hidden>Stop</button>' +
+            '<span class="va-status" aria-live="polite"></span>' +
+          '</div>' +
           '<dl class="factbar">' + facts + '</dl>' +
         '</div>' +
         '<ol class="steps">' + steps + '</ol>' +
       '</article>';
+
+    if (window.Voiceover) window.Voiceover.mount(panel);
 
     document.title = m.name + " · Six Ways to Tell It";
   }
@@ -146,6 +121,24 @@
     if (location.hash.slice(1) !== id) history.replaceState(null, "", "#" + id);
   }
 
+  /* hash format: "#<methodId>" or "#<methodId>:<stepIndex>" (stepIndex is 0-based,
+     used for deep links from the site-wide search on the home page) */
+  function parseHash(h) {
+    h = (h || "").replace(/^#/, "");
+    if (!h) return { id: null, step: null };
+    var parts = h.split(":");
+    var step = parts.length > 1 ? parseInt(parts[1], 10) : NaN;
+    return { id: parts[0] || null, step: isFinite(step) ? step : null };
+  }
+
+  function scrollFlash(stepEl) {
+    if (!stepEl) return;
+    stepEl.classList.add("shown");
+    stepEl.scrollIntoView({ behavior: "smooth", block: "center" });
+    stepEl.classList.add("flash");
+    setTimeout(function () { stepEl.classList.remove("flash"); }, 1600);
+  }
+
   panel.addEventListener("click", function (e) {
     var b = e.target.closest(".reveal");
     if (!b) return;
@@ -159,7 +152,9 @@
   });
 
   window.addEventListener("hashchange", function () {
-    select(location.hash.slice(1));
+    var parsed = parseHash(location.hash);
+    if (parsed.id) select(parsed.id);
+    if (parsed.step !== null) scrollFlash(panel.querySelectorAll(".step")[parsed.step]);
   });
 
   /* ---------- cross-reference table ---------- */
@@ -276,13 +271,7 @@
 
   function goToResult(methodId, stepIndex) {
     select(methodId);
-    var stepEl = panel.querySelectorAll(".step")[stepIndex];
-    if (stepEl) {
-      stepEl.classList.add("shown");
-      stepEl.scrollIntoView({ behavior: "smooth", block: "center" });
-      stepEl.classList.add("flash");
-      setTimeout(function () { stepEl.classList.remove("flash"); }, 1600);
-    }
+    scrollFlash(panel.querySelectorAll(".step")[stepIndex]);
     closeSearch();
     searchInput.value = "";
   }
@@ -341,10 +330,12 @@
   });
 
   /* ---------- boot ---------- */
-  var fromHash = location.hash.slice(1);
-  if (fromHash && METHODS.some(function (m) { return m.id === fromHash; })) current = fromHash;
+  var bootHash = parseHash(location.hash);
+  if (bootHash.id && METHODS.some(function (m) { return m.id === bootHash.id; })) current = bootHash.id;
 
   renderRail();
   renderPanel();
   renderMatrix();
+
+  if (bootHash.step !== null) scrollFlash(panel.querySelectorAll(".step")[bootHash.step]);
 })();
