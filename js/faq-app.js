@@ -32,23 +32,20 @@
     }).join("");
   }
 
-  /* speech-friendly rendering of a reference like "Revelation 21:3-4" */
-  function speakableRef(r) {
-    return r.replace(/:/g, " verse ").replace(/-/g, " to ");
-  }
-
   function renderPanel() {
     if (!current) {
       panel.innerHTML = "<p>That category doesn&rsquo;t exist yet.</p>";
       return;
     }
+    var speakableRef = window.VerseVersions ? window.VerseVersions.speakableRef : function (r) { return r; };
 
     var steps = current.steps.map(function (s, i) {
       var verses = s.refs.map(function (r) {
-        var spoken = speakableRef(r) + ". " + (VERSES[r] || "");
-        return '<div class="verse" data-va="' + esc(spoken) + '">' +
+        var text = VERSES[r] || "";
+        var spoken = speakableRef(r) + ". " + text;
+        return '<div class="verse" data-ref="' + esc(r) + '" data-web-text="' + esc(text) + '" data-va="' + esc(spoken) + '">' +
           '<span class="vref">' + esc(r) + '</span>' +
-          '<p class="vtext">' + esc(VERSES[r] || "") + '</p>' +
+          '<p class="vtext">' + esc(text) + '</p>' +
           '</div>';
       }).join("");
 
@@ -85,6 +82,7 @@
       '</article>';
 
     if (window.Voiceover) window.Voiceover.mount(panel);
+    if (window.VerseVersions) window.VerseVersions.applyTo(panel);
   }
 
   function scrollFlash(stepEl) {

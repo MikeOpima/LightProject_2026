@@ -40,6 +40,8 @@ then visit <http://localhost:8000>.
     css/style.css        design tokens, layout, light and dark themes, all page types
     js/theme.js           colour-theme toggle, shared by every page
     js/voiceover.js        "Listen" read-aloud control, shared by gospel.html + questions/*.html
+    js/bible-api-config.js  YOUR API keys for the paid translations — edit this one
+    js/verse-versions.js    the version dropdown + live verse fetching, shared by every page
     js/data.js             gospel content: verse text, gists, the six frameworks
     js/app.js               gospel page: rail, panel, practice mode, in-page search
     js/faith-data.js        FAQ content: verse text, gists, the six categories
@@ -85,6 +87,50 @@ cross-reference table.
 
 Whichever file you edit, don't touch `index.html`'s FAQ rail links or the
 `start-cards` by hand if you rename a category `id` — update them to match.
+
+## Bible versions
+
+Every verse on the site can be shown in **WEB, KJV, NKJV, ESV, NASB, NIV, or CSB**,
+picked from the dropdown in the top bar (persists across pages via
+`localStorage`). Two work immediately; five need a one-time setup step because
+they're commercially licensed translations this site can't ship text for
+directly — it fetches it live, on demand, from each publisher's own API.
+
+**Work out of the box:**
+- **WEB** — bundled locally in `data.js`/`faith-data.js`, public domain.
+- **KJV** — fetched from the free [bible-api.com](https://bible-api.com), public domain.
+
+**Need a free API key** (edit `js/bible-api-config.js` — every step is
+documented in comments at the top of that file):
+- **ESV** — key from [api.esv.org](https://api.esv.org/account/create/).
+- **NKJV, NASB, NIV, CSB** — one shared key from
+  [scripture.api.bible](https://scripture.api.bible/), plus each translation's
+  own "Bible ID" looked up from your account (the file has the lookup command).
+  Not every plan includes every translation — check your dashboard.
+
+Until a version's key is filled in (or its fetch fails for any reason — offline,
+rate-limited, an unrecognized reference), every verse using it quietly falls
+back to WEB and a small banner above the article says so. Nothing breaks either
+way.
+
+**Two things worth knowing before you rely on this in front of people:**
+1. **API keys pasted into `bible-api-config.js` are public.** This is a
+   client-side static site with no server to hide them behind, so anyone can
+   read a key out of the page source or the Network tab. Fine for a free-tier
+   key on a small site; if that ever matters more, the fix is routing these
+   fetches through a small server-side proxy (a Cloudflare Worker / Netlify
+   function) instead of calling the APIs directly from the browser — ask if
+   you want that built.
+2. **CORS is unverified.** I couldn't confirm from documentation alone whether
+   `api.esv.org` and `api.scripture.api.bible` allow direct browser requests
+   from an arbitrary origin (some APIs expect server-side calls only). If a
+   version silently falls back to WEB even with a correct key filled in, open
+   the browser console — a CORS error there means that API needs the proxy
+   approach above rather than a client-side fix.
+3. Each licensed translation's required copyright notice is already in the
+   footer of `gospel.html` and every `questions/*.html` page. Worth a quick
+   check against each publisher's current permissions page before this goes
+   fully public, since exact required wording can change.
 
 ## Notes
 

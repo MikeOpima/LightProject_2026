@@ -29,6 +29,10 @@
       <a href="gospel.html" aria-current="page">Six Ways to Tell It</a>
       <a href="index.html#questions">Questions About Faith</a>
     </nav>
+    <div class="version-picker">
+      <label for="version-select">Version</label>
+      <select id="version-select" aria-label="Bible translation"></select>
+    </div>
   </div>
 </div>
 
@@ -67,6 +71,7 @@
     </nav>
 
     <main id="main">
+      <div class="version-banner" id="version-banner" hidden></div>
       <div id="panel" role="tabpanel"></div>
 
       <section class="section" id="index">
@@ -119,11 +124,14 @@
 
   <footer class="colophon">
     <p>Scripture quotations are from the World English Bible, which is in the public domain. Framework summaries are drawn from the sources above.</p>
+    <p>Other translations available from the version menu, when configured: ESV&reg; copyright &copy; 2001 by Crossway. NIV&reg; copyright &copy; 1973, 1978, 1984, 2011 by Biblica, Inc.&trade; NASB&reg; copyright &copy; 1960, 1971, 1977, 1995, 2020 by The Lockman Foundation. CSB&reg; copyright &copy; 2017 by Holman Bible Publishers. NKJV&reg; copyright &copy; 1982 by Thomas Nelson. All used by permission; all rights reserved. Verify current required wording against each publisher's permissions page before relying on this notice.</p>
   </footer>
 </div>
 
 <script src="js/theme.js"></script>
 <script src="js/voiceover.js"></script>
+<script src="js/bible-api-config.js"></script>
+<script src="js/verse-versions.js"></script>
 <script src="js/data.js"></script>
 <script src="js/app.js"></script>
 </body>

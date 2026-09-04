@@ -37,21 +37,18 @@
     }
   }
 
-  /* speech-friendly rendering of a reference like "Romans 8:38–39" */
-  function speakableRef(r) {
-    return r.replace(/:/g, " verse ").replace(/–/g, " to ");
-  }
-
   /* ---------- framework panel ---------- */
   function renderPanel() {
     var m = METHODS.filter(function (x) { return x.id === current; })[0];
+    var speakableRef = window.VerseVersions ? window.VerseVersions.speakableRef : function (r) { return r; };
 
     var steps = m.steps.map(function (s, i) {
       var verses = s.refs.map(function (r) {
-        var spoken = speakableRef(r) + ". " + (VERSES[r] || "");
-        return '<div class="verse" data-va="' + esc(spoken) + '">' +
+        var text = VERSES[r] || "";
+        var spoken = speakableRef(r) + ". " + text;
+        return '<div class="verse" data-ref="' + esc(r) + '" data-web-text="' + esc(text) + '" data-va="' + esc(spoken) + '">' +
           '<span class="vref">' + esc(r) + '</span>' +
-          '<p class="vtext">' + esc(VERSES[r] || "") + '</p>' +
+          '<p class="vtext">' + esc(text) + '</p>' +
           '</div>';
       }).join("");
 
@@ -91,6 +88,7 @@
       '</article>';
 
     if (window.Voiceover) window.Voiceover.mount(panel);
+    if (window.VerseVersions) window.VerseVersions.applyTo(panel);
 
     document.title = m.name + " · Six Ways to Tell It";
   }
