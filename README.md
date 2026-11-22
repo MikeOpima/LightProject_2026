@@ -28,7 +28,7 @@ then visit <http://localhost:8000>.
 
 ## Files
 
-    index.html          home page: hero art, site-wide search, FAQ rail, start cards
+    index.html          home page: cinematic painting hero, site-wide search, FAQ rail, start cards
     gospel.html          the six gospel frameworks (rail + panel + cross-reference table)
     questions/
       doubt.html          )
@@ -47,6 +47,7 @@ then visit <http://localhost:8000>.
     js/faith-data.js        FAQ content: verse text, gists, the six categories
     js/faq-app.js            FAQ page: renders one category + the cross-page rail
     js/home.js               home page: site-wide search across data.js + faith-data.js
+    js/cinema.js             home page: full-screen painting slideshow + rotating headline in the hero
 
 ## Editing the content
 

@@ -15,107 +15,114 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body class="home">
 
 <a class="skip" href="#main">Skip to content</a>
 
-<div class="sitebar">
+<div class="sitebar sitebar--over">
   <div class="sitebar-inner">
     <a class="sitebar-brand" href="index.html">&#10013; Search the Scriptures</a>
     <nav class="sitebar-nav" aria-label="Site sections">
       <a href="gospel.html">The Gospel</a>
       <a href="#questions">Questions About Faith</a>
     </nav>
-    <div class="version-picker">
-      <label for="version-select">Version</label>
-      <select id="version-select" aria-label="Bible translation"></select>
-    </div>
-  </div>
-</div>
-
-<div class="wrap">
-
-  <header class="hero">
-    <div class="header-actions">
+    <div class="sitebar-tools">
+      <div class="version-picker">
+        <label for="version-select">Version</label>
+        <select id="version-select" aria-label="Bible translation"></select>
+      </div>
       <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch colour theme">
         <span class="tt-label" id="tt-label">Theme</span>
       </button>
     </div>
+  </div>
+</div>
 
-    <div class="hero-art" aria-hidden="true">
-      <svg viewBox="0 0 600 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="hero-art-title">
-        <title id="hero-art-title">Three crosses on a hill at Calvary</title>
+<header class="cine" id="cine">
+  <div class="cine-media" aria-hidden="true">
+      <figure class="cine-slide is-active" data-line1="The Light" data-line2="of the World" data-ref="John 8:12" data-credit="Gerard van Honthorst &middot; <em>Adoration of the Shepherds</em> &middot; 1622">
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Gerard_van_Honthorst_-_Adoration_of_the_Shepherds_(1622).jpg?width=1920" fetchpriority="high" alt="" decoding="async" style="object-position:45% 50%">
+      </figure>
+      <figure class="cine-slide" data-line1="The Bread" data-line2="of Life" data-ref="John 6:35" data-credit="Caravaggio &middot; <em>The Supper at Emmaus</em> &middot; 1601">
+        <img data-src="https://commons.wikimedia.org/wiki/Special:FilePath/1602-3_Caravaggio,Supper_at_Emmaus_National_Gallery,_London.jpg?width=1920" alt="" decoding="async" style="object-position:40% 35%">
+      </figure>
+      <figure class="cine-slide" data-line1="The Calm" data-line2="in the Storm" data-ref="Mark 4:39" data-credit="Rembrandt &middot; <em>The Storm on the Sea of Galilee</em> &middot; 1633">
+        <img data-src="https://commons.wikimedia.org/wiki/Special:FilePath/Rembrandt_Christ_in_the_Storm_on_the_Lake_of_Galilee.jpg?width=1920" alt="" decoding="async" style="object-position:50% 40%">
+      </figure>
+      <figure class="cine-slide" data-line1="The Word" data-line2="Made Flesh" data-ref="John 1:14" data-credit="Caravaggio &middot; <em>The Incredulity of Saint Thomas</em> &middot; c.&nbsp;1601">
+        <img data-src="https://commons.wikimedia.org/wiki/Special:FilePath/Caravaggio_-_The_Incredulity_of_Saint_Thomas.jpg?width=1920" alt="" decoding="async" style="object-position:35% 45%">
+      </figure>
+      <figure class="cine-slide" data-line1="The Arms" data-line2="of the Father" data-ref="Luke 15:20" data-credit="Rembrandt &middot; <em>The Return of the Prodigal Son</em> &middot; c.&nbsp;1668">
+        <img data-src="https://commons.wikimedia.org/wiki/Special:FilePath/Rembrandt_-_The_Return_of_the_Prodigal_Son.jpg?width=1920" alt="" decoding="async" style="object-position:30% 42%">
+      </figure>
+  </div>
+  <div class="cine-shade" aria-hidden="true"></div>
+
+  <div class="cine-inner">
+    <div class="cine-copy">
+      <h1 class="cine-kicker">Search the Scriptures</h1>
+      <p class="cine-title" id="cine-title" aria-hidden="true">
+        <span class="ct-line"><span class="ct-in" id="ct-1">The Light</span></span>
+        <span class="ct-line"><span class="ct-in"><span id="ct-2">of the World</span><em class="ct-ref" id="ct-ref">John 8:12</em></span></span>
+      </p>
+      <p class="cine-lede">&ldquo;You search the Scriptures, because you think that in them you have eternal life; and these are they which testify about me.&rdquo; <span class="cine-lede-ref">John 5:39</span></p>
+
+      <form class="search-lg" role="search" id="home-search-form" onsubmit="return false">
+        <input type="search" id="home-search-input" class="search-lg-input" placeholder="Search verses, frameworks, and questions&hellip;" autocomplete="off" aria-label="Search the site">
+        <div class="search-lg-results" id="home-search-results" hidden></div>
+      </form>
+      <p class="search-lg-hint">Try &ldquo;doubt&rdquo;, &ldquo;hell&rdquo;, or &ldquo;John 3:16&rdquo; &middot; press <kbd>/</kbd> to search</p>
+    </div>
+
+    <div class="cine-foot">
+      <p class="cine-meta">Six frameworks &middot; Six categories<br>Twenty-nine questions, every verse in full</p>
+      <div class="cine-controls" id="cine-controls" role="group" aria-label="Background paintings">
+        <button class="cine-pause" id="cine-pause" type="button" aria-label="Pause slideshow" aria-pressed="false"></button>
+      </div>
+      <a class="cine-down" href="#questions" aria-label="Scroll to the questions">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+    <p class="cine-credit" id="cine-credit">Gerard van Honthorst &middot; <em>Adoration of the Shepherds</em> &middot; 1622</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="hero-secondary invite-band">
+    <div class="hero-hand" aria-hidden="true">
+      <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="hero-hand-title">
+        <title id="hero-hand-title">An open hand with a wound in the palm</title>
         <style>
-          .sky{fill:var(--panel-2)}
-          .glow{fill:var(--gilt);opacity:.3}
-          .hill-far{fill:var(--rule)}
-          .hill-near{fill:var(--ink);opacity:.85}
-          .cross-side{stroke:var(--ink);stroke-width:5;stroke-linecap:round}
-          .cross-center{stroke:var(--red);stroke-width:8;stroke-linecap:round}
+          .hand{fill:var(--ink)}
+          .ray{stroke:var(--gilt);stroke-width:2;stroke-linecap:round}
+          .wound{fill:var(--red)}
         </style>
-        <rect class="sky" x="0" y="0" width="600" height="240"/>
-        <circle class="glow" cx="300" cy="86" r="150"/>
-        <path class="hill-far" d="M0,190 Q90,150 180,175 T360,168 T600,185 L600,240 L0,240 Z"/>
-        <path class="hill-near" d="M0,205 Q120,175 260,195 T600,200 L600,240 L0,240 Z"/>
-        <g class="cross-side">
-          <line x1="150" y1="140" x2="150" y2="205"/>
-          <line x1="132" y1="160" x2="168" y2="160"/>
+        <g class="hand">
+          <rect x="32" y="6" width="13" height="52" rx="6.5" transform="rotate(-14 38.5 55)"/>
+          <rect x="48" y="2" width="13" height="56" rx="6.5" transform="rotate(-5 54.5 55)"/>
+          <rect x="64" y="2" width="13" height="56" rx="6.5" transform="rotate(5 70.5 55)"/>
+          <rect x="80" y="8" width="13" height="50" rx="6.5" transform="rotate(14 86.5 55)"/>
+          <rect x="20" y="52" width="16" height="40" rx="8" transform="rotate(-35 28 72)"/>
+          <rect x="36" y="50" width="48" height="55" rx="20"/>
         </g>
-        <g class="cross-side">
-          <line x1="450" y1="145" x2="450" y2="205"/>
-          <line x1="433" y1="164" x2="467" y2="164"/>
+        <g class="ray">
+          <line x1="69" y1="78" x2="76" y2="78"/>
+          <line x1="64.5" y1="70.2" x2="68" y2="64.1"/>
+          <line x1="55.5" y1="70.2" x2="52" y2="64.1"/>
+          <line x1="51" y1="78" x2="44" y2="78"/>
+          <line x1="55.5" y1="85.8" x2="52" y2="91.9"/>
+          <line x1="64.5" y1="85.8" x2="68" y2="91.9"/>
         </g>
-        <g class="cross-center">
-          <line x1="300" y1="95" x2="300" y2="205"/>
-          <line x1="266" y1="128" x2="334" y2="128"/>
-        </g>
+        <circle class="wound" cx="60" cy="78" r="5"/>
       </svg>
     </div>
+    <p class="hero-invite">&ldquo;Come to me, all you who labor and are heavily burdened, and I will give you rest.&rdquo;<span class="hero-invite-ref">Matthew 11:28</span></p>
+  </div>
 
-    <p class="eyebrow">Six frameworks &middot; Six categories &middot; Twenty-nine questions</p>
-    <h1>Search the <em>Scriptures</em></h1>
-    <p class="standfirst">&ldquo;You search the Scriptures, because you think that in them you have eternal life; and these are they which testify about me.&rdquo; Everything on this site, in one place &mdash; type a word, a question, or a reference.</p>
-
-    <form class="search-lg" role="search" id="home-search-form" onsubmit="return false">
-      <input type="search" id="home-search-input" class="search-lg-input" placeholder="Search verses, frameworks, and questions&hellip;" autocomplete="off" aria-label="Search the site">
-      <div class="search-lg-results" id="home-search-results" hidden></div>
-    </form>
-    <p class="search-lg-hint">Try &ldquo;doubt&rdquo;, &ldquo;hell&rdquo;, or a reference like &ldquo;John 3:16&rdquo; &middot; press <kbd>/</kbd> to search</p>
-
-    <div class="hero-secondary">
-      <div class="hero-hand" aria-hidden="true">
-        <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="hero-hand-title">
-          <title id="hero-hand-title">An open hand with a wound in the palm</title>
-          <style>
-            .hand{fill:var(--ink)}
-            .ray{stroke:var(--gilt);stroke-width:2;stroke-linecap:round}
-            .wound{fill:var(--red)}
-          </style>
-          <g class="hand">
-            <rect x="32" y="6" width="13" height="52" rx="6.5" transform="rotate(-14 38.5 55)"/>
-            <rect x="48" y="2" width="13" height="56" rx="6.5" transform="rotate(-5 54.5 55)"/>
-            <rect x="64" y="2" width="13" height="56" rx="6.5" transform="rotate(5 70.5 55)"/>
-            <rect x="80" y="8" width="13" height="50" rx="6.5" transform="rotate(14 86.5 55)"/>
-            <rect x="20" y="52" width="16" height="40" rx="8" transform="rotate(-35 28 72)"/>
-            <rect x="36" y="50" width="48" height="55" rx="20"/>
-          </g>
-          <g class="ray">
-            <line x1="69" y1="78" x2="76" y2="78"/>
-            <line x1="64.5" y1="70.2" x2="68" y2="64.1"/>
-            <line x1="55.5" y1="70.2" x2="52" y2="64.1"/>
-            <line x1="51" y1="78" x2="44" y2="78"/>
-            <line x1="55.5" y1="85.8" x2="52" y2="91.9"/>
-            <line x1="64.5" y1="85.8" x2="68" y2="91.9"/>
-          </g>
-          <circle class="wound" cx="60" cy="78" r="5"/>
-        </svg>
-      </div>
-      <p class="hero-invite">&ldquo;Come to me, all you who labor and are heavily burdened, and I will give you rest.&rdquo;<span class="hero-invite-ref">Matthew 11:28</span></p>
-    </div>
-  </header>
 
   <div class="columns" id="questions">
     <nav class="rail" aria-label="Commonly asked questions">
@@ -164,5 +171,6 @@
 <script src="js/data.js"></script>
 <script src="js/faith-data.js"></script>
 <script src="js/home.js"></script>
+<script src="js/cinema.js"></script>
 </body>
 </html>
